@@ -1,0 +1,38 @@
+
+fastapi>=0.100
+uvicorn[standard]>=0.22
+
+# Database (complaint store)
+sqlmodel>=0.0.8
+aiosqlite>=0.18
+
+# RAG & embeddings
+langchain>=0.0.300  
+faiss-cpu>=1.7.4  
+sentence-transformers>=2.2.2
+
+# Ollama client
+ollama>=0.1.0
+
+# HTTP client for Streamlit front end
+requests>=2.30
+
+# CLI / scripting
+python-dotenv>=1.0
+
+# Validation
+pydantic[email]>=1.10
+
+# ( if using greenlet + asyncio SQLAlchemy
+greenlet>=2.0
+langchain>=0.0.300
+langchain-connector>=0.0.1      
+langchain-huggingface>=0.2.0
+langchain-community>=0.2.0
+faiss-cpu>=1.7.4
+sentence-transformers>=2.2.2
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0
+sqlmodel>=0.0.8
+python-dotenv>=1.0.0
+email-validator
