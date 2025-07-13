@@ -1,6 +1,26 @@
-venv/
+# Common Python ignores
 __pycache__/
-*.pyc
-db/
+*.py[cod]
+*.sqlite3
 *.db
-.env
+*.log
+
+# Virtual environments
+venv/
+.env/
+
+# Knowledge files or databases
+data/
+knowledge/
+*.pdf
+*.zip
+*.tar
+*.mp4
+*.png
+*.jpg
+
+# Streamlit and other cache
+.streamlit/
+.cache/
+venv/
+*.dylib
