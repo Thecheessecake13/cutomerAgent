@@ -1,34 +1,34 @@
 A **Retrieval-Augmented Generation (RAG)**-powered chatbot that guides users through filing customer complaints via a REST API and answers follow-up questions using a small knowledge base.
 
 ---
-High-Level Architecture Overview
+## High-Level Architecture Overview
 
-                    ┌────────────────────────────┐
-                    │      Streamlit Frontend    │
-                    │  (streamlit_app.py)        │
-                    └────────────┬───────────────┘
-                                 │
-                                 ▼
-                    ┌────────────────────────────┐
-                    │   ChatSession (chatbot/)    │
-                    │  Handles input logic,       │
-                    │  complaint flow, fallback   │
-                    │  to RAG if needed           │
-                    └────────────┬───────────────┘
-                                 │
-            ┌────────────────────┴─────────────────────┐
-            ▼                                          ▼
-┌────────────────────────────┐        ┌─────────────────────────────────┐
-│ Complaint API (FastAPI)    │        │   RAG Pipeline (rag_chain.py)   │
-│  POST/GET /complaints      │        │   - Vector store (ObjectBox)    │
-│  CRUD operations on DB     │        │   - HuggingFace embeddings      │
-└────────────┬───────────────┘        │   - LLM (Ollama)                │
-             │                        └──────────────┬──────────────────┘
-             ▼                                         ▼
-┌────────────────────────────┐        ┌─────────────────────────────────┐
-│    SQLite DB (via ORM)     │        │  Knowledge Store (PDF/TXT/DOCX)│
-│  users, complaints, chats  │        │  data/docs/                     │
-└────────────────────────────┘        └─────────────────────────────────┘
+                        ┌────────────────────────────┐
+                        │      Streamlit Frontend    │
+                        │  (streamlit_app.py)        │
+                        └────────────┬───────────────┘
+                                     │
+                                     ▼
+                        ┌────────────────────────────┐
+                        │   ChatSession (chatbot/)    │
+                        │  Handles input logic,       │
+                        │  complaint flow, fallback   │
+                        │  to RAG if needed           │
+                        └────────────┬───────────────┘
+                                     │
+                ┌────────────────────┴─────────────────────┐
+                ▼                                          ▼
+    ┌────────────────────────────┐        ┌─────────────────────────────────┐
+    │ Complaint API (FastAPI)    │        │   RAG Pipeline (rag_chain.py)   │
+    │  POST/GET /complaints      │        │   - Vector store (ObjectBox)    │
+    │  CRUD operations on DB     │        │   - HuggingFace embeddings      │
+    └────────────┬───────────────┘        │   - LLM (Ollama)                │
+                 │                        └──────────────┬──────────────────┘
+                 ▼                                         ▼
+    ┌────────────────────────────┐        ┌─────────────────────────────────┐
+    │    SQLite DB (via ORM)     │        │  Knowledge Store (PDF/TXT/DOCX)│
+    │  users, complaints, chats  │        │  data/docs/                     │
+    └────────────────────────────┘        └─────────────────────────────────┘
 
 ---
 
@@ -97,9 +97,6 @@ Located in data/docs/.
 SQLite database stores:
 Complaint records
 
-Addition
-Chat history
-Chat history can be fetched/restored via UI or session.
 
 
 
