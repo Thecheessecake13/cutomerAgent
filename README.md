@@ -1,6 +1,37 @@
 A **Retrieval-Augmented Generation (RAG)**-powered chatbot that guides users through filing customer complaints via a REST API and answers follow-up questions using a small knowledge base.
 
 ---
+High-Level Architecture Overview
+
+                    ┌────────────────────────────┐
+                    │      Streamlit Frontend    │
+                    │  (streamlit_app.py)        │
+                    └────────────┬───────────────┘
+                                 │
+                                 ▼
+                    ┌────────────────────────────┐
+                    │   ChatSession (chatbot/)    │
+                    │  Handles input logic,       │
+                    │  complaint flow, fallback   │
+                    │  to RAG if needed           │
+                    └────────────┬───────────────┘
+                                 │
+            ┌────────────────────┴─────────────────────┐
+            ▼                                          ▼
+┌────────────────────────────┐        ┌─────────────────────────────────┐
+│ Complaint API (FastAPI)    │        │   RAG Pipeline (rag_chain.py)   │
+│  POST/GET /complaints      │        │   - Vector store (ObjectBox)    │
+│  CRUD operations on DB     │        │   - HuggingFace embeddings      │
+└────────────┬───────────────┘        │   - LLM (Ollama)                │
+             │                        └──────────────┬──────────────────┘
+             ▼                                         ▼
+┌────────────────────────────┐        ┌─────────────────────────────────┐
+│    SQLite DB (via ORM)     │        │  Knowledge Store (PDF/TXT/DOCX)│
+│  users, complaints, chats  │        │  data/docs/                     │
+└────────────────────────────┘        └─────────────────────────────────┘
+
+---
+
 
 ## Project Structure
 
@@ -28,6 +59,53 @@ project/
 ```
 
 ---
+
+## End-to-End Flow Breakdown
+
+1. Streamlit Frontend (streamlit_app.py)
+User interacts via chat interface.
+Input is captured and passed to the backend logic.
+Displays response messages and chat history.
+
+2. ChatSession Handler (chat_session.py)
+Manages conversation state.
+Routes query through one of:
+Complaint Registration Flow (collects name, phone, email, details).
+Complaint Status Retrieval (if user provides complaint ID).
+RAG Fallback for generic queries.
+
+3. Complaint Handling (FastAPI api/main.py, routes.py)
+Routes:
+POST /complaints: Store complaint.
+GET /complaints/{id}: Retrieve complaint status.
+Uses SQLAlchemy / SQLModel ORM.
+
+4. RAG Logic (rag_chain.py)
+Loads:
+Embedding model: sentence-transformers/all-MiniLM-L6-v2
+Vector store: ObjectBox 
+LLM: llama3 via OllamaLLM
+Executes Retrieval-Augmented Generation:
+Embeds query → retrieves top chunks → builds context → LLM answers.
+
+5. Knowledge Ingestion
+Loader script reads .txt, .pdf, .docx.
+Splits into chunks, embeds them, and persists to ObjectBox.
+Located in data/docs/.
+
+6. Database Layer (core/database.py, core/storage.py)
+SQLite database stores:
+Complaint records
+
+Addition
+Chat history
+Chat history can be fetched/restored via UI or session.
+
+
+
+---
+
+
 
 ## Architecture & Flow
 
@@ -146,6 +224,11 @@ streamlit run streamlit_app.py
 ```
 
 ---
+
+
+ 
+
+
 
 
  
